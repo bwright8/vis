@@ -1,3 +1,4 @@
+// DOM Elements
 const container = d3.select("#scroll");
 const figure = container.select("figure");
 const article = container.select("article");
@@ -23,33 +24,58 @@ function handleResize() {
 
 // scrollama event handlers
 function handleStepEnter(response) {
-  console.log(response.index);
   // response = { element, direction, index }
+  const index = response.index;
+  const currentElement = d3.select(`#step${index}`);
+  // For each step, different stuff happens:
+  switch (index) {
+    case 0:
+      // Write what should happen when scroll to the first step
+      currentElement.select("p").text("hello");
+      currentElement.style("background-color", "pink");
+      break;
+    case 1:
+      currentElement.select("p").text("how are you?");
+      currentElement.style("background-color", "blue");
+      break;
+    case 2:
+      currentElement.select("p").text("it's okay");
+      currentElement.style("background-color", "grey");
+      break;
+    case 3:
+      currentElement.select("p").text("sure");
+      currentElement.style("background-color", "yellow");
+      break;
+  }
 
-  // add color to current step only
-  step.classed("is-active", function (d, i) {
-    return i === response.index;
-  });
-  d3.select(`#step${response.index}`)
-  .select("p")
-  .text("hello");
+  // If a certain action what happens for all steps in a universal way,
+  // this would be a better way to organize the code.
+  figure.select("p").text(`${index + 1}, ${response.direction}`);
+}
+function handleStepExit(response) {
+  // response = { element, direction, index }
+  const index = response.index;
+  const currentElement = d3.select(`#step${index}`);
+  switch (index) {
+    case 0:
+      // Write what should happen when exit the first step
+      currentElement.select("p").text("?");
+      break;
+    case 1:
+      currentElement.select("p").text("??");
+      break;
+    case 2:
+      currentElement.select("p").text("???");
+      break;
+    case 3:
+      currentElement.select("p").text("?????");
+      break;
+  }
 
+  currentElement.style("background-color", "white");
   // update graphic based on step
   figure.select("p").text(`${response.index + 1}, ${response.direction}`);
 }
-function handleStepExit(response) {
-    // response = { element, direction, index }
-  
-    // add color to current step only
-    step.classed("is-active", function (d, i) {
-      return i === response.index;
-    });
-    d3.select(`#step${response.index}`)
-    .select("p")
-    .text("bye");
-    // update graphic based on step
-    figure.select("p").text(`${response.index + 1}, ${response.direction}`);
-  }
 
 function init() {
   // 1. force a resize on load to ensure proper dimensions are sent to scrollama
